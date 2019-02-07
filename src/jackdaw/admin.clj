@@ -87,8 +87,7 @@
   ([^AdminClient client topics]
   {:pre [(client? client)
          (sequential? topics)]}
-   (->>  (.describeTopics client (map :topic-name topics)
-                     (DescribeTopicsOptions.))
+   (->>  (.describeTopics client (map :topic-name topics))
          .all deref
          (map (fn [[k v]] [k (jd/datafy v)]))
          (into {}))))
@@ -100,10 +99,12 @@
   current value."
   [^AdminClient client topics]
   {:pre [(client? client)
-          (sequential? topics)]}
-  (-> client
-      (.describeConfigs (map #(-> % :topic-name jd/->topic-resource)))
-      .all deref vals first jd/datafy))
+         (sequential? topics)]}
+  (->> (.describeConfigs client (map #(-> % :topic-name jd/->topic-resource) topics))
+       .all deref
+       (map (fn [[k v]] [(:name (jd/datafy k)) (jd/datafy v)]))
+       (into {})))
+
 
 (defn topics-ready?
   "Given an `AdminClient` and a sequence topic descriptors, return
