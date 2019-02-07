@@ -160,10 +160,10 @@
   producer."
   [producer-or-consumer {:keys [^String topic-name]}]
   (->> (cond (instance? KafkaConsumer producer-or-consumer)
-             (.partitionsFor ^KafkaConsumer consumer topic-name)
+             (.partitionsFor ^KafkaConsumer producer-or-consumer topic-name)
 
              (instance? KafkaProducer producer-or-consumer)
-             (.partitionsFor ^KafkaProducer consumer topic-name)
+             (.partitionsFor ^KafkaProducer producer-or-consumer topic-name)
 
              :else (throw (ex-info "Got non producer/consumer!"
                                    {:inst producer-or-consumer
