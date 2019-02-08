@@ -105,7 +105,6 @@
        (map (fn [[k v]] [(:name (jd/datafy k)) (jd/datafy v)]))
        (into {})))
 
-
 (defn topics-ready?
   "Given an `AdminClient` and a sequence topic descriptors, return
   `true` if and only if all listed topics have a leader and in-sync
